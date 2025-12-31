@@ -41,14 +41,17 @@ end
 ---@param target string
 ---@return CodeLineType
 local function match_line_type(line, target)
-  if line:match("type%s+" .. vim.pesc(target) .. "%s*struct") or
-     line:match("type%s+" .. vim.pesc(target) .. "%s*{") then
+  if
+    line:match("type%s+" .. vim.pesc(target) .. "%s*struct") or line:match("type%s+" .. vim.pesc(target) .. "%s*{")
+  then
     return CodeLineType.Type
   elseif line:match("[%*%[%]]*" .. vim.pesc(target) .. "%s*`") then
     return CodeLineType.InType
-  elseif line:match("returns%s*%(" .. vim.pesc(target) .. "%s*%)") or
-         line:match("%(" .. vim.pesc(target) .. "%s*%)%s*returns") or
-         line:match("%(%s*" .. vim.pesc(target) .. "%s*%)$") then
+  elseif
+    line:match("returns%s*%(" .. vim.pesc(target) .. "%s*%)")
+    or line:match("%(" .. vim.pesc(target) .. "%s*%)%s*returns")
+    or line:match("%(%s*" .. vim.pesc(target) .. "%s*%)$")
+  then
     return CodeLineType.Url
   end
   return CodeLineType.None
@@ -78,9 +81,11 @@ local function find_type_definitions(bufnr, target, current_line)
   for line_idx, line in ipairs(lines) do
     if line_idx - 1 ~= current_line then
       -- Match type definition: "type TypeName struct {"
-      if line:match("type%s+" .. vim.pesc(target) .. "%s*struct") or
-         line:match("type%s+" .. vim.pesc(target) .. "%s*{") or
-         line:match("type%s+" .. vim.pesc(target) .. "$") then
+      if
+        line:match("type%s+" .. vim.pesc(target) .. "%s*struct")
+        or line:match("type%s+" .. vim.pesc(target) .. "%s*{")
+        or line:match("type%s+" .. vim.pesc(target) .. "$")
+      then
         local col = find_target_position(line, target)
         if col then
           table.insert(locations, {

@@ -35,7 +35,10 @@ M.get_luasnip_snippets = function()
   local fmt = require("luasnip.extras.fmt").fmt
 
   return {
-    s("info", fmt([[
+    s(
+      "info",
+      fmt(
+        [[
 info(
 	title: {}
 	desc: {}
@@ -45,27 +48,51 @@ info(
 )
 
 {}
-]], { i(1, "title"), i(2, "description"), i(3, "author"), i(4, "email"), i(5, "1.0"), i(0) })),
+]],
+        { i(1, "title"), i(2, "description"), i(3, "author"), i(4, "email"), i(5, "1.0"), i(0) }
+      )
+    ),
 
-    s("service", fmt([[
+    s(
+      "service",
+      fmt(
+        [[
 service {}-api {{
 	{}
 }}
-]], { i(1, "name"), i(0) })),
+]],
+        { i(1, "name"), i(0) }
+      )
+    ),
 
-    s("type", fmt([[
+    s(
+      "type",
+      fmt(
+        [[
 type {} {{
 	{}
 }}
-]], { i(1, "Name"), i(0) })),
+]],
+        { i(1, "Name"), i(0) }
+      )
+    ),
 
-    s("tys", fmt([[
+    s(
+      "tys",
+      fmt(
+        [[
 type {} struct {{
 	{}
 }}
-]], { i(1, "Name"), i(0) })),
+]],
+        { i(1, "Name"), i(0) }
+      )
+    ),
 
-    s("handler", fmt([[
+    s(
+      "handler",
+      fmt(
+        [[
 @doc(
 	summary: {}
 )
@@ -73,21 +100,44 @@ type {} struct {{
 {} /{}({}) returns({})
 
 {}
-]], { i(1, "description"), i(2, "handlerName"), c(3, { t("get"), t("post"), t("put"), t("delete"), t("patch") }), i(4, "path"), i(5, "Request"), i(6, "Response"), i(0) })),
+]],
+        {
+          i(1, "description"),
+          i(2, "handlerName"),
+          c(3, { t("get"), t("post"), t("put"), t("delete"), t("patch") }),
+          i(4, "path"),
+          i(5, "Request"),
+          i(6, "Response"),
+          i(0),
+        }
+      )
+    ),
 
-    s("@doc", fmt([[
+    s(
+      "@doc",
+      fmt(
+        [[
 @doc(
 	summary: {}
 )
 {}
-]], { i(1, "description"), i(0) })),
+]],
+        { i(1, "description"), i(0) }
+      )
+    ),
 
-    s("@server", fmt([[
+    s(
+      "@server",
+      fmt(
+        [[
 @server(
 	handler: {}
 )
 {}
-]], { i(1, "HandlerName"), i(0) })),
+]],
+        { i(1, "HandlerName"), i(0) }
+      )
+    ),
 
     s("@handler", fmt("@handler {}", { i(1, "handlerName") })),
 
@@ -101,20 +151,32 @@ type {} struct {{
     s("path", fmt('`path:"{}"`', { i(1, "param") })),
     s("form", fmt('`form:"{}"`', { i(1, "field") })),
 
-    s("jwt", fmt([[
+    s(
+      "jwt",
+      fmt(
+        [[
 @server(
 	jwt: {}
 )
 {}
-]], { i(1, "Auth"), i(0) })),
+]],
+        { i(1, "Auth"), i(0) }
+      )
+    ),
 
-    s("group", fmt([[
+    s(
+      "group",
+      fmt(
+        [[
 @server(
 	prefix: {}
 	group: {}
 )
 {}
-]], { i(1, "/api/v1"), i(2, "groupName"), i(0) })),
+]],
+        { i(1, "/api/v1"), i(2, "groupName"), i(0) }
+      )
+    ),
 
     s("im", fmt('import "{}"', { i(1, "package") })),
   }

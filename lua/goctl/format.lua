@@ -26,11 +26,13 @@ M.format = function()
   -- Run goctl api format with stdin
   local cmd = { goctl_path, "api", "format", "-iu", "-dir", filename, "--stdin" }
 
-  local result = vim.system(cmd, {
-    stdin = content,
-    text = true,
-    timeout = 5000,
-  }):wait()
+  local result = vim
+    .system(cmd, {
+      stdin = content,
+      text = true,
+      timeout = 5000,
+    })
+    :wait()
 
   if result.code ~= 0 then
     local err = result.stderr or "Unknown error"
