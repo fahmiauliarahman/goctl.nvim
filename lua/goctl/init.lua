@@ -2,10 +2,12 @@
 ---@field format_on_save boolean Enable format on save
 ---@field goctl_path string Path to goctl binary
 ---@field enable_snippets boolean Enable snippets
+---@field enable_keymaps boolean Enable default keymaps (gd, gr)
 local config = {
   format_on_save = true,
   goctl_path = "goctl",
   enable_snippets = true,
+  enable_keymaps = true,
 }
 
 ---@class Goctl
@@ -37,6 +39,11 @@ M.setup = function(opts)
 
   -- Setup commands
   require("goctl.commands").setup()
+
+  -- Setup keymaps for definition navigation
+  if M.config.enable_keymaps then
+    require("goctl.definition").setup_keymaps()
+  end
 end
 
 return M
