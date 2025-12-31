@@ -220,20 +220,40 @@ M.setup_keymaps = function()
       end, { buffer = bufnr, desc = "Go to definition" })
 
       vim.keymap.set("n", "gr", function()
-        local word = vim.fn.expand("<cword>")
-        local locations = find_type_usages(bufnr, word, vim.api.nvim_win_get_cursor(0)[1] - 1)
-        local defs = find_type_definitions(bufnr, word, vim.api.nvim_win_get_cursor(0)[1] - 1)
-        vim.list_extend(locations, defs)
-
-        if #locations > 0 then
-          vim.fn.setqflist(locations)
-          vim.cmd("copen")
-        else
-          vim.notify("No references found", vim.log.levels.INFO, { title = "goctl" })
-        end
+        M.jump_to_references()
       end, { buffer = bufnr, desc = "Find references" })
     end,
   })
+end
+
+---Find all references of word under cursor
+---@return table[]? locations
+M.find_references = function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local word = vim.fn.expand("<cword>")
+  if not word or word == "" then
+    return nil
+  end
+
+  local current_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+  local locations = find_type_usages(bufnr, word, current_line)
+  local defs = find_type_definitions(bufnr, word, current_line)
+  vim.list_extend(locations, defs)
+
+  return locations
+end
+
+---Jump to references
+M.jump_to_references = function()
+  local locations = M.find_references()
+
+  if not locations or #locations == 0 then
+    vim.notify("No references found", vim.log.levels.INFO, { title = "goctl" })
+    return
+  end
+
+  vim.fn.setqflist(locations)
+  vim.cmd("copen")
 end
 
 return M
