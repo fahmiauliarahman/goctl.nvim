@@ -80,11 +80,17 @@ local function find_type_definitions(bufnr, target, current_line)
 
   for line_idx, line in ipairs(lines) do
     if line_idx - 1 ~= current_line then
-      -- Match type definition: "type TypeName struct {"
+      -- Match type definition patterns:
+      -- "type TypeName struct {" or "type TypeName {"
+      -- "type TypeName" (empty type, possibly with trailing whitespace)
+      -- "TypeName {" inside type() block
+      local escaped = vim.pesc(target)
       if
-        line:match("type%s+" .. vim.pesc(target) .. "%s*struct")
-        or line:match("type%s+" .. vim.pesc(target) .. "%s*{")
-        or line:match("type%s+" .. vim.pesc(target) .. "$")
+        line:match("type%s+" .. escaped .. "%s*struct")
+        or line:match("type%s+" .. escaped .. "%s*{")
+        or line:match("type%s+" .. escaped .. "%s*$")
+        or line:match("^%s+" .. escaped .. "%s*{")
+        or line:match("^%s+" .. escaped .. "%s*$")
       then
         local col = find_target_position(line, target)
         if col then
