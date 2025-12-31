@@ -1,0 +1,30 @@
+local commands = require("goctl.commands")
+
+describe("goctl.commands", function()
+  describe("setup", function()
+    before_each(function()
+      -- Clean up existing commands if they exist
+      pcall(vim.api.nvim_del_user_command, "GoctlFormat")
+      pcall(vim.api.nvim_del_user_command, "GoctlGenerate")
+    end)
+
+    it("creates GoctlFormat command", function()
+      commands.setup()
+      local cmds = vim.api.nvim_get_commands({})
+      assert.is_not_nil(cmds.GoctlFormat)
+    end)
+
+    it("creates GoctlGenerate command", function()
+      commands.setup()
+      local cmds = vim.api.nvim_get_commands({})
+      assert.is_not_nil(cmds.GoctlGenerate)
+    end)
+
+    it("GoctlGenerate accepts arguments", function()
+      commands.setup()
+      local cmds = vim.api.nvim_get_commands({})
+      assert.is_not_nil(cmds.GoctlGenerate)
+      assert.equals("*", cmds.GoctlGenerate.nargs)
+    end)
+  end)
+end)
