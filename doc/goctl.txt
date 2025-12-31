@@ -21,12 +21,13 @@ goctl `.api` files including:
 
 - Syntax highlighting
 - Format on save
-- Go-to-definition and find references
+- Go-to-definition, find references, and go-to-type-definition
+- Auto-remove `struct` keyword from type definitions
 - Code generation via goctl
 - LuaSnip snippets
 
 Requirements:
-- Neovim >= 0.8.0
+- Neovim >= 0.9.0
 - goctl CLI (https://go-zero.dev/docs/tasks/installation/goctl)
 - Optional: LuaSnip for snippets
 
@@ -57,10 +58,11 @@ Using packer.nvim:
 Call the setup function with your preferred options:
 >lua
     require("goctl").setup({
-      format_on_save = true,    -- Enable format on save (default: true)
-      goctl_path = "goctl",     -- Path to goctl binary (default: "goctl")
-      enable_snippets = true,   -- Enable LuaSnip snippets (default: true)
-      enable_keymaps = true,    -- Enable gd/gr keymaps (default: true)
+      format_on_save = true,         -- Enable format on save (default: true)
+      goctl_path = "goctl",          -- Path to goctl binary (default: "goctl")
+      enable_snippets = true,        -- Enable LuaSnip snippets (default: true)
+      enable_keymaps = true,         -- Enable gd/gr/gy keymaps (default: true)
+      remove_struct_keyword = true,  -- Remove struct keyword (default: true)
     })
 <
                                                            *goctl-config-opts*
@@ -88,7 +90,16 @@ enable_keymaps                                       *goctl-config-enable_keymap
     Default: `true`
 
     Enable default keymaps (`gd` for go-to-definition, `gr` for find
-    references) in goctl buffers.
+    references, `gy` for go-to-type-definition) in goctl buffers.
+
+remove_struct_keyword                         *goctl-config-remove_struct_keyword*
+    Type: `boolean`
+    Default: `true`
+
+    Remove the `struct` keyword from type definitions after formatting.
+    The goctl formatter adds `struct` keyword to types, but in `.api` files
+    the preferred style is without it. When enabled, `TypeName struct {`
+    becomes `TypeName {`.
 
 ==============================================================================
 4. COMMANDS                                                   *goctl-commands*
@@ -128,6 +139,12 @@ gd                  Go to definition. Jumps to the type definition when cursor
 gr                  Find all references. Opens quickfix list with all usages
                     of the type under cursor.
 
+                                                                    *goctl-gy*
+gy                  Go to type definition. Jumps directly to the type
+                    definition of the word under cursor. Works on type
+                    references in URL patterns like `(TypeName)` or
+                    `returns(TypeName)`, as well as field type references.
+
 ==============================================================================
 6. FORMATTING                                               *goctl-formatting*
 
@@ -140,6 +157,36 @@ Format on save is enabled by default. To format manually:
 Format errors are displayed as diagnostics in the buffer, showing:
 - Line and column number
 - Error message from goctl
+
+                                                  *goctl-remove-struct-keyword*
+Struct Keyword Removal~
+
+By default, the plugin removes the `struct` keyword from type definitions
+after formatting. The goctl formatter adds `struct` to all types, but the
+preferred `.api` file style omits it.
+
+Before (goctl output):
+>
+    type (
+        LoginRequest struct {
+            Username string `json:"username"`
+        }
+    )
+<
+After (with `remove_struct_keyword = true`):
+>
+    type (
+        LoginRequest {
+            Username string `json:"username"`
+        }
+    )
+<
+To disable this behavior:
+>lua
+    require("goctl").setup({
+      remove_struct_keyword = false,
+    })
+<
 
 ==============================================================================
 7. CODE GENERATION                                          *goctl-generation*

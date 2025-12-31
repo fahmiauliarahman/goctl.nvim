@@ -6,7 +6,8 @@ A Neovim plugin for [go-zero](https://github.com/zeromicro/go-zero) `.api` file 
 
 - Syntax highlighting for `.api` files
 - Format on save using `goctl api format`
-- Go-to-definition and find references
+- Go-to-definition, find references, and go-to-type-definition
+- Auto-remove `struct` keyword from type definitions
 - Code snippets (LuaSnip integration)
 - Code generation command
 
@@ -29,6 +30,7 @@ A Neovim plugin for [go-zero](https://github.com/zeromicro/go-zero) `.api` file 
     goctl_path = "goctl",
     enable_snippets = true,
     enable_keymaps = true,
+    remove_struct_keyword = true,
   },
 }
 ```
@@ -56,8 +58,10 @@ require("goctl").setup({
   goctl_path = "goctl",
   -- Enable snippets (requires LuaSnip)
   enable_snippets = true,
-  -- Enable default keymaps (gd, gr)
+  -- Enable default keymaps (gd, gr, gy)
   enable_keymaps = true,
+  -- Remove "struct" keyword from type definitions on format
+  remove_struct_keyword = true,
 })
 ```
 
@@ -72,10 +76,11 @@ require("goctl").setup({
 
 When `enable_keymaps` is true, the following keymaps are available in `.api` files:
 
-| Keymap | Description      |
-| ------ | ---------------- |
-| `gd`   | Go to definition |
-| `gr`   | Find references  |
+| Keymap | Description             |
+| ------ | ----------------------- |
+| `gd`   | Go to definition        |
+| `gr`   | Find references         |
+| `gy`   | Go to type definition   |
 
 ## Snippets
 
