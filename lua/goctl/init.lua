@@ -2,12 +2,14 @@
 ---@field format_on_save boolean Enable format on save
 ---@field goctl_path string Path to goctl binary
 ---@field enable_snippets boolean Enable snippets
----@field enable_keymaps boolean Enable default keymaps (gd, gr)
+---@field enable_keymaps boolean Enable default keymaps (gd, gr, gy)
+---@field remove_struct_keyword boolean Remove "struct" keyword from type definitions on format
 local config = {
   format_on_save = true,
   goctl_path = "goctl",
   enable_snippets = true,
   enable_keymaps = true,
+  remove_struct_keyword = true,
 }
 
 ---@class Goctl

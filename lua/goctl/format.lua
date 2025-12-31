@@ -55,6 +55,11 @@ M.format = function()
       table.remove(formatted_lines)
     end
 
+    -- Remove "struct" keyword from empty type definitions if configured
+    if config.remove_struct_keyword then
+      formatted_lines = M.remove_struct_keyword(formatted_lines)
+    end
+
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, formatted_lines)
 
     -- Restore cursor position (clamped to valid range)
@@ -95,6 +100,20 @@ M.handle_format_error = function(bufnr, error_output)
   if #diagnostics == 0 then
     vim.notify("goctl format error: " .. error_output, vim.log.levels.ERROR, { title = "goctl" })
   end
+end
+
+---Remove "struct" keyword from type definitions
+---Converts "TypeName struct {" to "TypeName {"
+---@param lines string[]
+---@return string[]
+M.remove_struct_keyword = function(lines)
+  local result = {}
+  for _, line in ipairs(lines) do
+    -- Match "TypeName struct {" or "TypeName struct{}" patterns
+    local modified = line:gsub("(%s*)(%w+)%s+struct%s*({)", "%1%2 %3")
+    table.insert(result, modified)
+  end
+  return result
 end
 
 ---Parse error line from goctl output
