@@ -1,0 +1,202 @@
+*goctl.txt*    Neovim plugin for go-zero goctl API files    *goctl.nvim*
+
+==============================================================================
+CONTENTS                                                      *goctl-contents*
+
+    1. Introduction ............................ |goctl-introduction|
+    2. Installation ............................ |goctl-installation|
+    3. Configuration ........................... |goctl-configuration|
+    4. Commands ................................ |goctl-commands|
+    5. Keymaps ................................. |goctl-keymaps|
+    6. Formatting .............................. |goctl-formatting|
+    7. Code Generation ......................... |goctl-generation|
+    8. Snippets ................................ |goctl-snippets|
+    9. Syntax Highlighting ..................... |goctl-syntax|
+
+==============================================================================
+1. INTRODUCTION                                           *goctl-introduction*
+
+goctl.nvim is a Neovim plugin that provides IDE-like features for go-zero
+goctl `.api` files including:
+
+- Syntax highlighting
+- Format on save
+- Go-to-definition and find references
+- Code generation via goctl
+- LuaSnip snippets
+
+Requirements:
+- Neovim >= 0.8.0
+- goctl CLI (https://go-zero.dev/docs/tasks/installation/goctl)
+- Optional: LuaSnip for snippets
+
+==============================================================================
+2. INSTALLATION                                           *goctl-installation*
+
+Using lazy.nvim:
+>lua
+    {
+      "fahmaauliarahman/goctl.nvim",
+      ft = "goctl",
+      opts = {},
+    }
+<
+Using packer.nvim:
+>lua
+    use {
+      "fahmaauliarahman/goctl.nvim",
+      ft = "goctl",
+      config = function()
+        require("goctl").setup()
+      end,
+    }
+<
+==============================================================================
+3. CONFIGURATION                                         *goctl-configuration*
+
+Call the setup function with your preferred options:
+>lua
+    require("goctl").setup({
+      format_on_save = true,    -- Enable format on save (default: true)
+      goctl_path = "goctl",     -- Path to goctl binary (default: "goctl")
+      enable_snippets = true,   -- Enable LuaSnip snippets (default: true)
+      enable_keymaps = true,    -- Enable gd/gr keymaps (default: true)
+    })
+<
+                                                           *goctl-config-opts*
+
+format_on_save                                       *goctl-config-format_on_save*
+    Type: `boolean`
+    Default: `true`
+
+    Automatically format `.api` files when saving.
+
+goctl_path                                               *goctl-config-goctl_path*
+    Type: `string`
+    Default: `"goctl"`
+
+    Path to the goctl binary. Set this if goctl is not in your PATH.
+
+enable_snippets                                     *goctl-config-enable_snippets*
+    Type: `boolean`
+    Default: `true`
+
+    Enable LuaSnip snippet integration. Requires LuaSnip to be installed.
+
+enable_keymaps                                       *goctl-config-enable_keymaps*
+    Type: `boolean`
+    Default: `true`
+
+    Enable default keymaps (`gd` for go-to-definition, `gr` for find
+    references) in goctl buffers.
+
+==============================================================================
+4. COMMANDS                                                   *goctl-commands*
+
+                                                               *:GoctlFormat*
+:GoctlFormat
+    Format the current `.api` file using `goctl api format`.
+
+                                                             *:GoctlGenerate*
+:GoctlGenerate [args]
+    Generate Go code from the current `.api` file.
+
+    Without arguments:
+        Runs `goctl api go -api <file> -dir <dir>`
+
+    With arguments:
+        Runs `goctl api <args> -api <file>`
+
+    Examples:
+>vim
+        :GoctlGenerate
+        :GoctlGenerate go -style goZero
+        :GoctlGenerate ts
+<
+==============================================================================
+5. KEYMAPS                                                     *goctl-keymaps*
+
+When `enable_keymaps` is true (default), the following keymaps are set for
+goctl buffers:
+
+                                                                    *goctl-gd*
+gd                  Go to definition. Jumps to the type definition when cursor
+                    is on a type reference. If cursor is on a type definition,
+                    shows usages in quickfix list.
+
+                                                                    *goctl-gr*
+gr                  Find all references. Opens quickfix list with all usages
+                    of the type under cursor.
+
+==============================================================================
+6. FORMATTING                                               *goctl-formatting*
+
+The plugin formats `.api` files using `goctl api format --stdin`.
+
+Format on save is enabled by default. To format manually:
+>vim
+    :GoctlFormat
+<
+Format errors are displayed as diagnostics in the buffer, showing:
+- Line and column number
+- Error message from goctl
+
+==============================================================================
+7. CODE GENERATION                                          *goctl-generation*
+
+Generate Go code from `.api` files using the `:GoctlGenerate` command.
+
+Default behavior:
+>
+    goctl api go -api <current-file> -dir <current-dir>
+<
+Custom arguments:
+>vim
+    :GoctlGenerate go -style goZero
+    :GoctlGenerate ts           " Generate TypeScript
+    :GoctlGenerate dart         " Generate Dart
+    :GoctlGenerate kt           " Generate Kotlin
+<
+==============================================================================
+8. SNIPPETS                                                   *goctl-snippets*
+
+Requires LuaSnip (https://github.com/L3MON4D3/LuaSnip).
+
+Available snippets:
+
+Trigger         Description~
+`info`          API info block
+`service`       Service definition
+`type`          Type definition
+`tys`           Type struct definition
+`handler`       Handler with @doc annotation
+`@doc`          Documentation annotation
+`@server`       Server annotation
+`@handler`      Handler annotation
+`get`           GET endpoint
+`post`          POST endpoint
+`put`           PUT endpoint
+`delete`        DELETE endpoint
+`patch`         PATCH endpoint
+`json`          JSON tag
+`path`          Path tag
+`form`          Form tag
+`jwt`           JWT server annotation
+`group`         Group server annotation
+`im`            Import statement
+
+==============================================================================
+9. SYNTAX HIGHLIGHTING                                         *goctl-syntax*
+
+The plugin provides syntax highlighting for `.api` files, including:
+
+- Keywords: `syntax`, `info`, `type`, `service`, `import`
+- HTTP methods: `get`, `post`, `put`, `delete`, `patch`
+- Annotations: `@server`, `@handler`, `@doc`
+- Types: struct fields, type names
+- Tags: `json`, `path`, `form`
+- Comments: `//` single-line comments
+- Strings and numbers
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:
