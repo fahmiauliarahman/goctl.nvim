@@ -44,6 +44,12 @@ M.setup = function(opts)
   if M.config.enable_keymaps then
     require("goctl.definition").setup_keymaps()
   end
+
+  -- Setup snippets
+  if M.config.enable_snippets then
+    require("goctl.snippets").setup()
+    require("goctl.snippets").load_luasnip()
+  end
 end
 
 return M

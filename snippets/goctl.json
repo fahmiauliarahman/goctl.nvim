@@ -1,0 +1,168 @@
+{
+  "import": {
+    "prefix": "im",
+    "body": "import \"${1:package}\"",
+    "description": "Import statement"
+  },
+  "type struct": {
+    "prefix": "tys",
+    "body": [
+      "type ${1:name} struct {",
+      "\t$0",
+      "}"
+    ],
+    "description": "Struct declaration"
+  },
+  "info": {
+    "prefix": "info",
+    "body": [
+      "info(",
+      "\ttitle: ${1:title}",
+      "\tdesc: ${2:description}",
+      "\tauthor: ${3:author}",
+      "\temail: ${4:email}",
+      "\tversion: ${5:1.0}",
+      ")",
+      "",
+      "$0"
+    ],
+    "description": "API info block"
+  },
+  "service": {
+    "prefix": "service",
+    "body": [
+      "service ${1:xxx-api} {",
+      "\t$0",
+      "}"
+    ],
+    "description": "Service definition"
+  },
+  "type": {
+    "prefix": "type",
+    "body": [
+      "type ${1:Name} {",
+      "\t$0",
+      "}"
+    ],
+    "description": "Type definition"
+  },
+  "handler": {
+    "prefix": "handler",
+    "body": [
+      "@doc(",
+      "\tsummary: ${1:description}",
+      ")",
+      "@handler ${2:handlerName}",
+      "${3|get,post,put,delete,patch|} /${4:path}(${5:Request}) returns(${6:Response})",
+      "",
+      "$0"
+    ],
+    "description": "Route handler"
+  },
+  "json tag": {
+    "prefix": "json",
+    "body": "`json:\"${1:field}\"$0`",
+    "description": "JSON tag"
+  },
+  "path tag": {
+    "prefix": "path",
+    "body": "`path:\"${1:param}\"$0`",
+    "description": "Path tag"
+  },
+  "form tag": {
+    "prefix": "form",
+    "body": "`form:\"${1:field}\"$0`",
+    "description": "Form tag"
+  },
+  "@doc": {
+    "prefix": "@doc",
+    "body": [
+      "@doc(",
+      "\tsummary: ${1:description}",
+      ")",
+      "$0"
+    ],
+    "description": "Doc annotation"
+  },
+  "@server": {
+    "prefix": "@server",
+    "body": [
+      "@server(",
+      "\thandler: ${1:HandlerName}",
+      ")",
+      "$0"
+    ],
+    "description": "Server annotation"
+  },
+  "@handler": {
+    "prefix": "@handler",
+    "body": "@handler ${1:handlerName}$0",
+    "description": "Handler annotation"
+  },
+  "post": {
+    "prefix": "post",
+    "body": [
+      "post /${1:path}(${2:Request}) returns(${3:Response})",
+      "",
+      "$0"
+    ],
+    "description": "POST endpoint"
+  },
+  "get": {
+    "prefix": "get",
+    "body": [
+      "get /${1:path}(${2:Request}) returns(${3:Response})",
+      "",
+      "$0"
+    ],
+    "description": "GET endpoint"
+  },
+  "delete": {
+    "prefix": "delete",
+    "body": [
+      "delete /${1:path}(${2:Request}) returns(${3:Response})",
+      "",
+      "$0"
+    ],
+    "description": "DELETE endpoint"
+  },
+  "put": {
+    "prefix": "put",
+    "body": [
+      "put /${1:path}(${2:Request}) returns(${3:Response})",
+      "",
+      "$0"
+    ],
+    "description": "PUT endpoint"
+  },
+  "patch": {
+    "prefix": "patch",
+    "body": [
+      "patch /${1:path}(${2:Request}) returns(${3:Response})",
+      "",
+      "$0"
+    ],
+    "description": "PATCH endpoint"
+  },
+  "jwt middleware": {
+    "prefix": "jwt",
+    "body": [
+      "@server(",
+      "\tjwt: ${1:Auth}",
+      ")",
+      "$0"
+    ],
+    "description": "JWT middleware"
+  },
+  "group": {
+    "prefix": "group",
+    "body": [
+      "@server(",
+      "\tprefix: ${1:/api/v1}",
+      "\tgroup: ${2:groupName}",
+      ")",
+      "$0"
+    ],
+    "description": "Route group with prefix"
+  }
+}
