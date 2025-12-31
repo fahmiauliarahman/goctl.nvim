@@ -209,6 +209,42 @@ M.jump_to_definition = function()
   end
 end
 
+---Go to type definition (find the type of the field under cursor)
+---@return table[]? locations
+M.goto_type_definition = function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local line_idx = cursor[1]
+
+  -- Use word under cursor for URL patterns and field types
+  local word = vim.fn.expand("<cword>")
+  if not word or word == "" then
+    vim.notify("No type found under cursor", vim.log.levels.INFO, { title = "goctl" })
+    return nil
+  end
+
+  local locations = find_type_definitions(bufnr, word, line_idx - 1)
+  return locations
+end
+
+---Jump to type definition
+M.jump_to_type_definition = function()
+  local locations = M.goto_type_definition()
+
+  if not locations or #locations == 0 then
+    vim.notify("No type definition found", vim.log.levels.INFO, { title = "goctl" })
+    return
+  end
+
+  if #locations == 1 then
+    local loc = locations[1]
+    vim.api.nvim_win_set_cursor(0, { loc.lnum, loc.col - 1 })
+  else
+    vim.fn.setqflist(locations)
+    vim.cmd("copen")
+  end
+end
+
 ---Setup keymaps for definition navigation
 M.setup_keymaps = function()
   vim.api.nvim_create_autocmd("FileType", {
@@ -222,6 +258,10 @@ M.setup_keymaps = function()
       vim.keymap.set("n", "gr", function()
         M.jump_to_references()
       end, { buffer = bufnr, desc = "Find references" })
+
+      vim.keymap.set("n", "gy", function()
+        M.jump_to_type_definition()
+      end, { buffer = bufnr, desc = "Go to type definition" })
     end,
   })
 end
